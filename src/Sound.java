@@ -1,6 +1,7 @@
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.File;
+import java.net.URL;
 
 public class Sound {
     public void playSound(String filepath){
@@ -8,11 +9,13 @@ public class Sound {
 
         try{
             Clip bloopclip= AudioSystem.getClip();
-            bloopclip.open(AudioSystem.getAudioInputStream(this.getClass().getResourceAsStream(filepath)));
+            URL file=this.getClass().getResource(filepath);
+
+            bloopclip.open(AudioSystem.getAudioInputStream(file));
             bloopclip.start();
             Thread.sleep(bloopclip.getMicrosecondLength()/1000);
         }catch(Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
 
     }
