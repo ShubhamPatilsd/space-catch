@@ -14,7 +14,7 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
     public Sprite ufo;
     public Sprite badguyone;
     //public Timer t=new Timer(30000,this);
-    public Timer t=new Timer(5000,this);
+    public Timer t=new Timer(20000,this);
     public Sprite badguytwo;
     public Sprite playbackground;
     public Sprite vrgoggles;
@@ -22,11 +22,14 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
     public Sprite hearttwo;
     public Sprite heartthree;
     public Sprite startscreenbackground;
+    public Sprite vrgogglesbig=new Sprite("/resources/vrgogglesbig.png",0,0);
+    public Sprite bigheartcodeday=new Sprite("/resources/bigheart_codeday.png",0,0);
     private boolean codedayheart=false;
     public Sprite codeday;
     private HashSet<Character> keystrokes;
     private int badguyvelocity=1;
     private BackgroundSound bgsound =new BackgroundSound("/resources/backgroundmusic.wav");
+    private BackgroundSound playsound =new BackgroundSound("/resources/playmusoc.wav");
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -67,6 +70,7 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
                     if (mousex >= 300 && mousex <= 500) {
                         if (mousey >= 225 && mousey <= 300) {
                             state = GameState.PLAYING;
+                            playsound.clip.setFramePosition(0);
 
                         }
                     }
@@ -113,6 +117,14 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
                     }
                 }
 
+                if(state==GameState.INSTRUCTIONS){
+                    if (mousex >= 20 && mousex <= 95) {
+                        if (mousey >= 20 && mousey <= 95) {
+                            state = GameState.START;
+
+                        }
+                    }
+                }
             }
 
             @Override
@@ -133,10 +145,11 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
         setFocusable(true);
         keystrokes=new HashSet<Character>();
         startscreenbackground=new Sprite("/resources/startscreenbackground.png",0,0);
-        playbackground=new Sprite("/resources/playbackground.gif",0,0);
-        ufo=new Sprite("/resources/ufo.gif",400,320);
-        badguyone=new Sprite("/resources/badguy.png",(int)(Math.random()*(740-1+1)+1),20);
-        badguytwo=new Sprite("/resources/badguy.png",(int)(Math.random()*(740-1+1)+1),20);
+        //playbackground=new Sprite("/resources/playbackground.gif",0,0);
+        playbackground=new Sprite("/resources/alternate_background.gif",0,0);
+        ufo=new Sprite("/resources/ufo.gif",400,440);
+        badguyone=new Sprite("/resources/rocket.gif",(int)(Math.random()*(740-1+1)+1),20);
+        badguytwo=new Sprite("/resources/rocket.gif",(int)(Math.random()*(740-1+1)+1),20);
         vrgoggles=new Sprite("/resources/vrgoggles.png",(int)(Math.random()*(740-1+1)+1),20);
         thread=new Thread(this);
         running=true;
@@ -155,23 +168,27 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
         while(running) {
 
             float f1 = System.currentTimeMillis();
-            if(lives==0){
-                state=GameState.GAME_OVER;
-            }
+
+            //new Sound().playSound("/resources/gameoversound.wav");
 
 
 
 
         if(state==GameState.PLAYING){
-
-            if(badguyvelocity>4){
-                badguyvelocity=4;
+            if(lives==0){
+                playsound.volume=false;
+                playsound.play();
+                state=GameState.GAME_OVER;
+                new Sound().playSound("/resources/gameoversound.wav");
+            }
+            if(badguyvelocity>5){
+                badguyvelocity=5;
             }
 
             badguyone.y+=badguyvelocity;
             badguytwo.y+=badguyvelocity;
             vrgoggles.y++;
-            codeday.y++;
+
 
 
 
@@ -181,44 +198,69 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
             vrgoggles.updateHitBox();
             ufo.updateHitBox();
 
+
             if (Sprite.collision(badguyone.hitbox, ufo.hitbox) || Sprite.collision(badguytwo.hitbox, ufo.hitbox)) {
                 lives--;
+                playsound.volume=false;
+                playsound.play();
                 new Sound().playSound("/resources/pop_3.wav");
-                ufo = new Sprite("/resources/ufo.gif", 400, 320);
-                badguyone = new Sprite("/resources/badguy.png", (int) (Math.random() * (740 - 1 + 1) + 1), 20);
-                badguytwo = new Sprite("/resources/badguy.png", (int) (Math.random() * (740 - 1 + 1) + 1), 20);
+                playsound.volume=true;
+                playsound.play();
+                ufo = new Sprite("/resources/ufo.gif", 400, 440);
+                badguyone=new Sprite("/resources/rocket.gif",(int)(Math.random()*(740-1+1)+1),20);
+                badguytwo=new Sprite("/resources/rocket.gif",(int)(Math.random()*(740-1+1)+1),20);
             }
             if (Sprite.collision((vrgoggles.hitbox), ufo.hitbox)) {
                 score++;
+                playsound.volume=false;
+                playsound.play();
                 new Sound().playSound("/resources/selectcharacter.wav");
+                playsound.volume=true;
+                playsound.play();
                 vrgoggles = new Sprite("/resources/vrgoggles.png", (int) (Math.random() * (740 - 1 + 1) + 1), 20);
             }
 
-            if (lives > 3) {
 
-            }
 
-            if (vrgoggles.y >= 340) {
+
+            if (vrgoggles.y >= 440) {
                 vrgoggles = new Sprite("/resources/vrgoggles.png", (int) (Math.random() * (740 - 1 + 1) + 1), 20);
             }
-            if (badguyone.y >= 340) {
-                badguyone = new Sprite("/resources/badguy.png", (int) (Math.random() * (740 - 1 + 1) + 1), 20);
-            }
-            if (badguytwo.y >= 340) {
-                badguytwo = new Sprite("/resources/badguy.png", (int) (Math.random() * (740 - 1 + 1) + 1), 20);
-            }
-            if(codeday.y>=340){
-                codeday=new Sprite("/resources/heart_codeday.png",(int)(Math.random()*(740-1+1)),20);
-            }
-            for (char c : keystrokes) {
+            if (badguyone.y >= 440) {
+                badguyone=new Sprite("/resources/rocket.gif",(int)(Math.random()*(740-1+1)+1),20);
 
-                if (c == 'a') {
+            }
+            if (badguytwo.y >= 440) {
+                badguytwo=new Sprite("/resources/rocket.gif",(int)(Math.random()*(740-1+1)+1),20);
+            }
+            if(codedayheart) {
+                if(Sprite.collision((codeday.hitbox),ufo.hitbox)){
+                    if(lives<3){
+                        lives++;
+                        codedayheart=false;
+                        ufo=new Sprite("/resources/ufo.gif",400,440);
 
-                    ufo.x -= 4;
+                    }
                 }
-                if (c == 'd') {
+                if (codeday.y >= 440) {
+                    codedayheart=false;
 
-                    ufo.x += 4;
+
+                }
+                codeday.y++;
+                codeday.updateHitBox();
+            }
+            if (!keystrokes.isEmpty()) {
+                for (char c : keystrokes) {
+
+                    if (c == 'a') {
+
+                        ufo.x -= 4;
+                    }
+                    if (c == 'd') {
+
+                        ufo.x += 4;
+                    }
                 }
             }
             if (ufo.x < -30) {
@@ -257,12 +299,16 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
 public void paintComponent(Graphics g){
         if(state==GameState.START){
             bgsound.volume=true;
+            playsound.volume=false;
+            playsound.play();
             bgsound.play();
             startscreenbackground.characterimage.paintIcon(this, g, startscreenbackground.x, startscreenbackground.y);
 
             //Play Button
             g.setColor(Color.white);
-
+            ufo.characterimage.paintIcon(this, g, 352,25);
+            g.setFont(new FontSprite("/resources/creditsfont.ttf",0,0,48).font);
+            g.drawString("Space Catch",185,150);
             g.fill3DRect(300,225,200,75,true);
 
             //Play Button Text
@@ -297,19 +343,53 @@ public void paintComponent(Graphics g){
         }
         if(state==GameState.INSTRUCTIONS){
             bgsound.volume=true;
+            playsound.volume=false;
+            playsound.play();
             bgsound.play();
             super.paintComponent(g);
             startscreenbackground.characterimage.paintIcon(this, g, startscreenbackground.x, startscreenbackground.y);
             g.setColor(Color.black);
             g.fillRect(0,0,800,600);
+            g.setFont(new FontSprite("/resources/creditsfont.ttf",0,0,24).font);
+
+            g.setColor(Color.white);
+            g.drawString("You are a ",175,150);
+            ufo.characterimage.paintIcon(this,g,400,100);
+
+            g.setColor(Color.white);
+            badguyone.characterimage.paintIcon(this,g,175,200);
+            g.drawString("hurts you",250,225);
+
+
+
+            vrgogglesbig.characterimage.paintIcon(this,g,175,275);
+            g.setColor(Color.white);
+            g.drawString("gives you points",275,325);
+
+
+            bigheartcodeday.characterimage.paintIcon(this,g,175,400);
+            g.setColor(Color.white);
+            g.drawString("gives you more lives",275,450);
+
+
+            g.fill3DRect(20,20,75,75,true);
+            g.setFont(new FontSprite("/resources/pixelated.ttf",0,0,24).font);
+            g.setColor(Color.black);
+            g.drawString("Back",35,65);
+
 
         }
         if(state==GameState.GAME_OVER){
+            playsound.volume=false;
+            playsound.play();
             super.paintComponent(g);
             playbackground.characterimage.paintIcon(this, g, playbackground.x, playbackground.y);
             g.setColor(Color.white);
             g.setFont(new FontSprite("/resources/pixelated.ttf/",200,300,70).font);
             g.drawString("Game Over",250,200);
+            g.setFont(scorefont.font);
+            g.drawString("Score: " + score, scorefont.x, scorefont.y);
+
             g.setColor(Color.white);
             g.fill3DRect(300,425,200,75,true);
 
@@ -320,6 +400,8 @@ public void paintComponent(Graphics g){
 
         if(state==GameState.CREDITS){
             bgsound.volume=true;
+            playsound.volume=false;
+            playsound.play();
             bgsound.play();
             super.paintComponent(g);
             startscreenbackground.characterimage.paintIcon(this, g, startscreenbackground.x, startscreenbackground.y);
@@ -340,10 +422,11 @@ public void paintComponent(Graphics g){
         }
 
         if(state==GameState.PLAYING) {
-
+            playsound.volume=true;
             t.start();
             bgsound.volume=false;
             bgsound.play();
+            playsound.play();
             super.paintComponent(g);
             playbackground.characterimage.paintIcon(this, g, playbackground.x, playbackground.y);
             ufo.characterimage.paintIcon(this, g, ufo.x, ufo.y);
@@ -352,6 +435,7 @@ public void paintComponent(Graphics g){
             vrgoggles.characterimage.paintIcon(this, g, vrgoggles.x, vrgoggles.y);
             if(codedayheart==true){
                 codeday.characterimage.paintIcon(this,g,codeday.x,codeday.y);
+
             }
             if (lives == 3) {
                 heartone.characterimage.paintIcon(this, g, heartone.x, heartone.y);
@@ -366,7 +450,7 @@ public void paintComponent(Graphics g){
                 heartone.characterimage.paintIcon(this, g, heartone.x, heartone.y);
 
             }
-            // g.drawRect(ufo.hitbox.x,ufo.hitbox.y,ufo.hitbox.width,ufo.hitbox.height);
+
             g.setFont(scorefont.font);
             g.setColor(Color.white);
             g.drawString("Score: " + score, scorefont.x, scorefont.y);
@@ -390,7 +474,7 @@ public void paintComponent(Graphics g){
         keystrokes.remove(e.getKeyChar());
     }
 public void init(){
-
+    t.restart();
     score=0;
     lives=3;
     codedayheart=false;
