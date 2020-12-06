@@ -456,7 +456,7 @@ public void paintComponent(Graphics g){
             super.paintComponent(g);
             playbackground.characterimage.paintIcon(this, g, playbackground.x, playbackground.y);
             g.setColor(Color.white);
-            g.setFont(new FontSprite("/resources/pixelated.ttf/",200,300,70).font);
+            g.setFont(new FontSprite("/resources/pixelated.ttf",200,300,70).font);
             g.drawString("Game Over",250,200);
             g.setFont(scorefont.font);
             g.drawString("Score: " + score, scorefont.x, scorefont.y);
