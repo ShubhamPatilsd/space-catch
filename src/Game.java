@@ -21,6 +21,7 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
     public Sprite heartone;
     public Sprite hearttwo;
     public Sprite heartthree;
+
     public Sprite startscreenbackground;
     public Sprite vrgogglesbig=new Sprite("/resources/vrgogglesbig.png",0,0);
     public Sprite bigheartcodeday=new Sprite("/resources/bigheart_codeday.png",0,0);
@@ -35,7 +36,7 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
     public void actionPerformed(ActionEvent e) {
         codedayheart=true;
         codeday=new Sprite("/resources/heart_codeday.png",(int)(Math.random()*(740-1+1)),20);
-        badguyvelocity+=4;
+        badguyvelocity++;
     }
 
 
@@ -104,7 +105,70 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
 
                         }
                     }
+                    //g.fill3DRect(625,275,50,50,true);
+                    //github.characterimage.paintIcon(this,g,630,280);
+                    //            g.drawString("Artist: Aareev Panda", 200,400);
+                    //            g.fill3DRect(625,375,50,50,true);
+                    //            youtubelogo.characterimage.paintIcon(this,g,630,380);
+                    String os=System.getProperty("os.name").toLowerCase();
+                    Runtime rt = Runtime.getRuntime();
+                    if (mousex >= 625 && mousex <= 675) {
+                        if (mousey >= 275 && mousey <= 325) {
 
+
+
+                            String url = "https://github.com/ShubhamPatilsd";
+                            if(os.indexOf("mac")>=0) {
+
+                                try {
+                                    rt.exec("open " + url);
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                }
+                            }else if(os.indexOf("win")>=0){
+
+                                try {
+                                    rt.exec("rundll32 url.dll,FileProtocolHandlers "+url);
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                }
+                            }else if(os.indexOf("nix")>=0 || os.indexOf("nux")>=0){
+                                try {
+                                    rt.exec("xdg-open "+url);
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                }
+                            }
+
+                        }
+                    }
+                    if (mousex >= 625 && mousex <= 675) {
+                        if (mousey >= 375 && mousey <= 425) {
+                            String url = "https://www.youtube.com/c/ReevythePanda/featured";
+                            if(os.indexOf("mac")>=0) {
+
+                                try {
+                                    rt.exec("open " + url);
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                }
+                            }else if(os.indexOf("win")>=0){
+
+                                try {
+                                    rt.exec("rundll32 url.dll,FileProtocolHandlers "+url);
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                }
+                            }else if(os.indexOf("nix")>=0 || os.indexOf("nux")>=0){
+                                try {
+                                    rt.exec("xdg-open "+url);
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                }
+                            }
+
+                        }
+                    }
 
                 }
                 if (state == GameState.GAME_OVER) {
@@ -148,8 +212,8 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
         //playbackground=new Sprite("/resources/playbackground.gif",0,0);
         playbackground=new Sprite("/resources/alternate_background.gif",0,0);
         ufo=new Sprite("/resources/ufo.gif",400,440);
-        badguyone=new Sprite("/resources/rocket.gif",(int)(Math.random()*(740-1+1)+1),20);
-        badguytwo=new Sprite("/resources/rocket.gif",(int)(Math.random()*(740-1+1)+1),20);
+        badguyone=new Sprite("/resources/rocketbig.gif",(int)(Math.random()*(740-1+1)+1),20);
+        badguytwo=new Sprite("/resources/rocketbig.gif",(int)(Math.random()*(740-1+1)+1),20);
         vrgoggles=new Sprite("/resources/vrgoggles.png",(int)(Math.random()*(740-1+1)+1),20);
         thread=new Thread(this);
         running=true;
@@ -181,8 +245,8 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
                 state=GameState.GAME_OVER;
                 new Sound().playSound("/resources/gameoversound.wav");
             }
-            if(badguyvelocity>5){
-                badguyvelocity=5;
+            if(badguyvelocity>10){
+                badguyvelocity=10;
             }
 
             badguyone.y+=badguyvelocity;
@@ -206,9 +270,9 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
                 new Sound().playSound("/resources/pop_3.wav");
                 playsound.volume=true;
                 playsound.play();
-                ufo = new Sprite("/resources/ufo.gif", 400, 440);
-                badguyone=new Sprite("/resources/rocket.gif",(int)(Math.random()*(740-1+1)+1),20);
-                badguytwo=new Sprite("/resources/rocket.gif",(int)(Math.random()*(740-1+1)+1),20);
+                ufo = new Sprite("/resources/ufo.gif", ufo.y, ufo.y);
+                badguyone=new Sprite("/resources/rocketbig.gif",(int)(Math.random()*(740-1+1)+1),20);
+                badguytwo=new Sprite("/resources/rocketbig.gif",(int)(Math.random()*(740-1+1)+1),20);
             }
             if (Sprite.collision((vrgoggles.hitbox), ufo.hitbox)) {
                 score++;
@@ -227,18 +291,21 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
                 vrgoggles = new Sprite("/resources/vrgoggles.png", (int) (Math.random() * (740 - 1 + 1) + 1), 20);
             }
             if (badguyone.y >= 440) {
-                badguyone=new Sprite("/resources/rocket.gif",(int)(Math.random()*(740-1+1)+1),20);
+                badguyone=new Sprite("/resources/rocketbig.gif",(int)(Math.random()*(740-1+1)+1),20);
 
             }
             if (badguytwo.y >= 440) {
-                badguytwo=new Sprite("/resources/rocket.gif",(int)(Math.random()*(740-1+1)+1),20);
+                badguytwo=new Sprite("/resources/rocketbig.gif",(int)(Math.random()*(740-1+1)+1),20);
             }
             if(codedayheart) {
                 if(Sprite.collision((codeday.hitbox),ufo.hitbox)){
                     if(lives<3){
+
                         lives++;
+                        new Sound().playSound("/resources/gaininghearts.wav");
                         codedayheart=false;
-                        ufo=new Sprite("/resources/ufo.gif",400,440);
+
+                        ufo=new Sprite("/resources/ufo.gif",ufo.x,ufo.y);
 
                     }
                 }
@@ -278,7 +345,7 @@ public class Game extends JPanel implements Runnable, KeyListener, ActionListene
             try{
                 thread.sleep((1000/60)-(long)deltaF);
             }catch(InterruptedException e){
-                e.printStackTrace();
+                state=GameState.PLAYING;
             }
 
 
@@ -353,24 +420,28 @@ public void paintComponent(Graphics g){
             g.setFont(new FontSprite("/resources/creditsfont.ttf",0,0,24).font);
 
             g.setColor(Color.white);
-            g.drawString("You are a ",175,150);
-            ufo.characterimage.paintIcon(this,g,400,100);
+            g.drawString("You are a ",175,100);
+            ufo.characterimage.paintIcon(this,g,400,50);
 
             g.setColor(Color.white);
-            badguyone.characterimage.paintIcon(this,g,175,200);
-            g.drawString("hurts you",250,225);
+            new Sprite("/resources/rocket.gif",0,0).characterimage.paintIcon(this,g,175,150);
+            g.drawString("hurts you",250,175);
 
 
 
-            vrgogglesbig.characterimage.paintIcon(this,g,175,275);
+            vrgogglesbig.characterimage.paintIcon(this,g,175,225);
             g.setColor(Color.white);
-            g.drawString("gives you points",275,325);
+            g.drawString("gives you points",275,275);
 
 
-            bigheartcodeday.characterimage.paintIcon(this,g,175,400);
+            bigheartcodeday.characterimage.paintIcon(this,g,175,350);
             g.setColor(Color.white);
-            g.drawString("gives you more lives",275,450);
+            g.drawString("gives you more lives",275,400);
 
+
+            new Sprite("/resources/keyboard.gif",0,0).characterimage.paintIcon(this,g,250,450);
+            g.drawString("Use",175,475);
+            g.drawString("To Move Right and Left",350,475);
 
             g.fill3DRect(20,20,75,75,true);
             g.setFont(new FontSprite("/resources/pixelated.ttf",0,0,24).font);
@@ -409,8 +480,14 @@ public void paintComponent(Graphics g){
             g.fillRect(150,200,500,210);
             g.setColor(Color.white);
             g.setFont(new FontSprite("/resources/creditsfont.ttf",0,0,24).font);
-            g.drawString("Programmer: Shubham Patil", 175,300);
-            g.drawString("Artist: Aareev Panda", 200,350);
+            g.drawString("Programmer: Shubham Patil", 125,300);
+            g.fill3DRect(625,275,50,50,true);
+            Sprite github=new Sprite("/resources/github_logo.png",0,0);
+            Sprite youtubelogo=new Sprite("/resources/youtubelogo.png",0,0);
+            github.characterimage.paintIcon(this,g,630,280);
+            g.drawString("Artist: Aareev Panda", 200,400);
+            g.fill3DRect(625,375,50,50,true);
+            youtubelogo.characterimage.paintIcon(this,g,630,380);
 
             g.setColor(Color.white);
             g.fill3DRect(20,20,75,75,true);
